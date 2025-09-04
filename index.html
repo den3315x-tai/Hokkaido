@@ -139,8 +139,6 @@
                     </div>
                 </div>
 
-                <button id="download-button" class="w-full text-center py-2 px-4 rounded-lg bg-blue-500 text-white font-bold hover:bg-blue-600 transition duration-300 ease-in-out mb-6">下載行程</button>
-
                 <div class="mb-6">
                     <h2 class="text-2xl font-semibold mb-4 text-gray-700">航班資訊</h2>
                     <div class="table-container">
@@ -534,7 +532,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             const tabs = document.querySelectorAll('.pill-tab-button');
             const contents = document.querySelectorAll('.tab-content');
-            const downloadButton = document.getElementById('download-button');
 
             // Set initial active tab and content based on ID
             function setActiveTab(tabId) {
@@ -571,20 +568,6 @@
                         chevron.classList.add('rotated');
                     }
                 });
-            });
-
-            // Download functionality
-            downloadButton.addEventListener('click', () => {
-                const htmlContent = document.documentElement.outerHTML;
-                const blob = new Blob([htmlContent], { type: 'text/html' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = '北海道旅遊規劃.html';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
             });
 
             // Initial active state
