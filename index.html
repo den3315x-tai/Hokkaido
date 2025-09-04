@@ -99,17 +99,17 @@
                 <button id="tab-overview" class="pill-tab-button active flex-1 md:flex-none text-center text-gray-600 font-semibold focus:outline-none">
                     旅程總覽
                 </button>
-                <button id="tab-expenses" class="pill-tab-button flex-1 md:flex-none text-center text-gray-600 font-semibold focus:outline-none">
-                    費用分析
-                </button>
-                <button id="tab-restaurants" class="pill-tab-button flex-1 md:flex-none text-center text-gray-600 font-semibold focus:outline-none">
-                    餐廳推薦
-                </button>
                 <button id="tab-itinerary" class="pill-tab-button flex-1 md:flex-none text-center text-gray-600 font-semibold focus:outline-none">
                     詳細行程
                 </button>
                 <button id="tab-lodging" class="pill-tab-button flex-1 md:flex-none text-center text-gray-600 font-semibold focus:outline-none">
                     住宿資訊
+                </button>
+                <button id="tab-restaurants" class="pill-tab-button flex-1 md:flex-none text-center text-gray-600 font-semibold focus:outline-none">
+                    餐廳推薦
+                </button>
+                <button id="tab-expenses" class="pill-tab-button flex-1 md:flex-none text-center text-gray-600 font-semibold focus:outline-none">
+                    費用分析
                 </button>
             </div>
 
@@ -133,7 +133,7 @@
                             <p class="text-sm text-gray-500">主要路線</p>
                         </div>
                         <div class="bg-gray-100 p-4 rounded-xl">
-                            <h3 class="font-bold text-gray-700">NT$ 50,622</h3>
+                            <h3 class="font-bold text-red-500">NT$ 50,622</h3>
                             <p class="text-sm text-gray-500">預估費用/人</p>
                         </div>
                     </div>
@@ -156,13 +156,13 @@
                                     <td>1/18</td>
                                     <td>11:10-16:00</td>
                                     <td>TR892</td>
-                                    <td>9630(永翔)</td>
+                                    <td class="text-red-500">9630(永翔)</td>
                                 </tr>
                                 <tr>
                                     <td>1/26</td>
                                     <td>18:00-21:35</td>
                                     <td>JX861</td>
-                                    <td>13488(永翔)</td>
+                                    <td class="text-red-500">13488(永翔)</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -185,125 +185,6 @@
                             <li><span class="font-semibold">第十天 (1/26)</span>：函館 > 回國。</li>
                         </ul>
                     </div>
-                </div>
-            </div>
-
-            <div id="content-expenses" class="tab-content p-4 md:p-6 bg-white rounded-b-lg">
-                <h2 class="text-2xl font-semibold mb-4 text-gray-700">已知費用</h2>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>項目</th>
-                                <th>詳細</th>
-                                <th>價錢(一人)</th>
-                                <th>備註</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>機票</td>
-                                <td>札幌進函館出(來回)</td>
-                                <td>23118</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>高鐵</td>
-                                <td>台南>桃園</td>
-                                <td>1190</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>桃園包車回台南</td>
-                                <td>桃園>台南</td>
-                                <td>2300</td>
-                                <td>基本單程5600 隨地點加錢</td>
-                            </tr>
-                            <tr>
-                                <td>北海道 JR PASS</td>
-                                <td>五日卷</td>
-                                <td>4541</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>住宿</td>
-                                <td>京王Prelia酒店 札幌</td>
-                                <td>9385</td>
-                                <td>五晚</td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td>The Lake Suit湖之栖</td>
-                                <td>7214</td>
-                                <td>一晚</td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td>OMO5 函館</td>
-                                <td>4063</td>
-                                <td>兩晚</td>
-                            </tr>
-                            <tr>
-                                <td>eSIM</td>
-                                <td>DJB 九天無限流量</td>
-                                <td>1130</td>
-                                <td>DJB E-SIM</td>
-                            </tr>
-                            <tr>
-                                <td>旅平險</td>
-                                <td>富邦</td>
-                                <td>1700</td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div id="content-restaurants" class="tab-content p-4 md:p-6 bg-white rounded-b-lg">
-                <h2 class="text-2xl font-semibold mb-4 text-gray-700">餐廳推薦</h2>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>類別</th>
-                                <th>店名</th>
-                                <th>地址</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>海鮮丼</td>
-                                <td>Sapporo Kaisen-don Senmon Ten Sushi Donburi</td>
-                                <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&query=Chuo%20Ward%2C%20Minami%203%20Jonishi%2C%205%20Chome-24%20%E3%81%8B%E3%82%89%E3%81%8F%E3%81%95%E3%83%9B%E3%83%86%E3%83%AB%201F" target="_blank">Chuo Ward, Minami 3 Jonishi, 5 Chome-24 からくさホテル 1F</a></td>
-                            </tr>
-                            <tr>
-                                <td>迴轉壽司</td>
-                                <td>根室花丸 JR Tower</td>
-                                <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&query=Chuo%20Ward%2C%20Kita%205%20Jonishi%2C%204%20Chome%20JR%E3%82%BF%E3%83%AF%E3%83%BC%E3%82%B9%E3%83%86%E3%83%A9%E3%83%97%E3%83%AC%E3%82%A4%E3%82%B9%206%E9%9A%8E" target="_blank">Chuo Ward, Kita 5 Jonishi, 4 Chome JRタワーステラプレイス 6階</a></td>
-                            </tr>
-                            <tr>
-                                <td>燒肉</td>
-                                <td>北海道燒肉 北牛</td>
-                                <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&query=4%20Chome-5-7%20Minami%206%20Jonishi%2C%20Chuo%20Ward%2C%20Sapporo" target="_blank">4 Chome-5-7 Minami 6 Jonishi, Chuo Ward, Sapporo</a></td>
-                            </tr>
-                            <tr>
-                                <td>湯咖哩</td>
-                                <td>奥芝商店湯咖哩</td>
-                                <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&query=Sapporo%2C%20Chuo%20Ward%2C%20Kita%204%20Jonishi%2C%201%20Chome%20%E3%83%9B%E3%82%AF%E3%83%AC%E3%83%B3%E3%83%93%E3%83%AB%20B1F%20%E3%83%91%E3%83%BC%E3%83%AB%E3%82%BF%E3%82%A6%E3%83%B3" target="_blank">Sapporo, Chuo Ward, Kita 4 Jonishi, 1 Chome ホクレンビル B1F パールタウン</a></td>
-                            </tr>
-                            <tr>
-                                <td>成吉思汗</td>
-                                <td>大黒屋 函館五稜郭店</td>
-                                <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&query=23-5%20Honcho%2C%20Hakodate" target="_blank">23-5 Honcho, Hakodate</a></td>
-                            </tr>
-                            <tr>
-                                <td>燒鳥</td>
-                                <td>鳥辰十字街店</td>
-                                <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&query=7-7%20Suehirocho%2C%20Hakodate%2C%20Hokkaido" target="_blank">7-7 Suehirocho, Hakodate, Hokkaido</a></td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
             </div>
 
@@ -507,19 +388,138 @@
                                 <td>1/18-1/23</td>
                                 <td>京王Prelia酒店</td>
                                 <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&query=4%20Chome-11-1%20Kita%208%20Jonishi%2C%20Kita%20Ward%2C%20Sapporo%2C%20Hokkaido%20060-0808" target="_blank">4 Chome-11-1 Kita 8 Jonishi, Kita Ward, Sapporo, Hokkaido 060-0808</a></td>
-                                <td>28156(平)</td>
+                                <td class="text-red-500">28156(平)</td>
                             </tr>
                             <tr>
                                 <td>1/23-1/24</td>
                                 <td>The Lake Suit湖之栖</td>
                                 <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&query=7-1%20Toyakoonsen%2C%20Sobetsu%2C%20Usu%20District%2C%20Hokkaido%20049-5731%E6%97%A5%E6%9C%AC" target="_blank">7-1 Toyakoonsen, Sobetsu, Usu District, Hokkaido 049-5731日本</a></td>
-                                <td>21643(平)</td>
+                                <td class="text-red-500">21643(平)</td>
                             </tr>
                             <tr>
                                 <td>1/24-1/26</td>
                                 <td>OMO5 函館</td>
                                 <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&query=24-1%20Wakamatsucho%2C%20Hakodate%2C%20Hokkaido%20040-0063%E6%97%A5%E6%9C%AC" target="_blank">24-1 Wakamatsucho, Hakodate, Hokkaido 040-0063日本</a></td>
-                                <td>12189(平)</td>
+                                <td class="text-red-500">12189(平)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="content-restaurants" class="tab-content p-4 md:p-6 bg-white rounded-b-lg">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-700">餐廳推薦</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>類別</th>
+                                <th>店名</th>
+                                <th>地址</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>海鮮丼</td>
+                                <td>Sapporo Kaisen-don Senmon Ten Sushi Donburi</td>
+                                <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&query=Chuo%20Ward%2C%20Minami%203%20Jonishi%2C%205%20Chome-24%20%E3%81%8B%E3%82%89%E3%81%8F%E3%81%95%E3%83%9B%E3%83%86%E3%83%AB%201F" target="_blank">Chuo Ward, Minami 3 Jonishi, 5 Chome-24 からくさホテル 1F</a></td>
+                            </tr>
+                            <tr>
+                                <td>迴轉壽司</td>
+                                <td>根室花丸 JR Tower</td>
+                                <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&query=Chuo%20Ward%2C%20Kita%205%20Jonishi%2C%204%20Chome%20JR%E3%82%BF%E3%83%AF%E3%83%BC%E3%82%B9%E3%83%86%E3%83%A9%E3%83%97%E3%83%AC%E3%82%A4%E3%82%B9%206%E9%9A%8E" target="_blank">Chuo Ward, Kita 5 Jonishi, 4 Chome JRタワーステラプレイス 6階</a></td>
+                            </tr>
+                            <tr>
+                                <td>燒肉</td>
+                                <td>北海道燒肉 北牛</td>
+                                <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&query=4%20Chome-5-7%20Minami%206%20Jonishi%2C%20Chuo%20Ward%2C%20Sapporo" target="_blank">4 Chome-5-7 Minami 6 Jonishi, Chuo Ward, Sapporo</a></td>
+                            </tr>
+                            <tr>
+                                <td>湯咖哩</td>
+                                <td>奥芝商店湯咖哩</td>
+                                <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&query=Sapporo%2C%20Chuo%20Ward%2C%20Kita%204%20Jonishi%2C%201%20Chome%20%E3%83%9B%E3%82%AF%E3%83%AC%E3%83%B3%E3%83%93%E3%83%AB%20B1F%20%E3%83%91%E3%83%BC%E3%83%AB%E3%82%BF%E3%82%A6%E3%83%B3" target="_blank">Sapporo, Chuo Ward, Kita 4 Jonishi, 1 Chome ホクレンビル B1F パールタウン</a></td>
+                            </tr>
+                            <tr>
+                                <td>成吉思汗</td>
+                                <td>大黒屋 函館五稜郭店</td>
+                                <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&query=23-5%20Honcho%2C%20Hakodate" target="_blank">23-5 Honcho, Hakodate</a></td>
+                            </tr>
+                            <tr>
+                                <td>燒鳥</td>
+                                <td>鳥辰十字街店</td>
+                                <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&query=7-7%20Suehirocho%2C%20Hakodate%2C%20Hokkaido" target="_blank">7-7 Suehirocho, Hakodate, Hokkaido</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="content-expenses" class="tab-content p-4 md:p-6 bg-white rounded-b-lg">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-700">已知費用</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>項目</th>
+                                <th>詳細</th>
+                                <th>價錢(一人)</th>
+                                <th>備註</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>機票</td>
+                                <td>札幌進函館出(來回)</td>
+                                <td class="text-red-500">23118</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>高鐵</td>
+                                <td>台南>桃園</td>
+                                <td class="text-red-500">1190</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>桃園包車回台南</td>
+                                <td>桃園>台南</td>
+                                <td class="text-red-500">2300</td>
+                                <td>基本單程5600 隨地點加錢</td>
+                            </tr>
+                            <tr>
+                                <td>北海道 JR PASS</td>
+                                <td>五日卷</td>
+                                <td class="text-red-500">4541</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>住宿</td>
+                                <td>京王Prelia酒店 札幌</td>
+                                <td class="text-red-500">9385</td>
+                                <td>五晚</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>The Lake Suit湖之栖</td>
+                                <td class="text-red-500">7214</td>
+                                <td>一晚</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>OMO5 函館</td>
+                                <td class="text-red-500">4063</td>
+                                <td>兩晚</td>
+                            </tr>
+                            <tr>
+                                <td>eSIM</td>
+                                <td>DJB 九天無限流量</td>
+                                <td class="text-red-500">1130</td>
+                                <td>DJB E-SIM</td>
+                            </tr>
+                            <tr>
+                                <td>旅平險</td>
+                                <td>富邦</td>
+                                <td class="text-red-500">1700</td>
+                                <td></td>
                             </tr>
                         </tbody>
                     </table>
