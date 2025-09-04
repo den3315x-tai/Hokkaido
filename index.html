@@ -1,0 +1,1082 @@
+<html lang="zh-TW"><head><script>(function(firebaseConfig, initialAuthToken, appId) {
+        window.__firebase_config = firebaseConfig;
+        window.__initial_auth_token = initialAuthToken;
+        window.__app_id = appId;
+            })("\n{\n  \"apiKey\": \"AIzaSyCqyCcs2R2e7AegGjvFAwG98wlamtbHvZY\",\n  \"authDomain\": \"bard-frontend.firebaseapp.com\",\n  \"projectId\": \"bard-frontend\",\n  \"storageBucket\": \"bard-frontend.firebasestorage.app\",\n  \"messagingSenderId\": \"175205271074\",\n  \"appId\": \"1:175205271074:web:2b7bd4d34d33bf38e6ec7b\"\n}\n","eyJhbGciOiJSUzI1NiIsImtpZCI6IjliMTEzMzgxNDVkZDk3ZmQ4YjgyMjgyYmRmNDg1ZDBiYjJiZmQwN2EiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJmaXJlYmFzZS1hZG1pbnNkay1mYnN2Y0BiYXJkLWZyb250ZW5kLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwiYXVkIjoiaHR0cHM6Ly9pZGVudGl0eXRvb2xraXQuZ29vZ2xlYXBpcy5jb20vZ29vZ2xlLmlkZW50aXR5LmlkZW50aXR5dG9vbGtpdC52MS5JZGVudGl0eVRvb2xraXQiLCJ1aWQiOiIwNzQ2MDA1NzY1Mzg5MTY4Nzg4MCIsImlzcyI6ImZpcmViYXNlLWFkbWluc2RrLWZic3ZjQGJhcmQtZnJvbnRlbmQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJjbGFpbXMiOnsiYXBwSWQiOiJjXzA5ZGZhOWM5NTc3NTVjZjVfaW5kZXguaHRtbC00MSJ9LCJleHAiOjE3NTY5NjQ5MTksImlhdCI6MTc1Njk2MTMxOSwiYWxnIjoiUlMyNTYifQ.Shm_TtcAKTWED4x2_QRClggC5tRESf5YVVD24JGvw8xZ1dWalVbvj9NcYpTOF5rLTMkx9T--BsPJfykB0VYhYjPaX-04g0kIVIVvfoWqOwSYKrq0J2Jz9uuWRH9VyH6zCF8eF78RCQITW3Dyro2wiWsVRQ1RH4Z4CZlRMfaH4CQlAv5rCzO8xYy4-M07tqTayiyHYBwnUGjDWHqW7HulOf4K3zLSQ5I1bbzPWiQXLFfbjw-wIKwHxU6lFBWGqL5MCj9-mt9ajCChZLq0tv0L2b-mjXX9nAPtu0stpZt9dS3WjuNoXJAlhlxenF23GgVCyCdIz0-Htw684w_cakCwww","c_09dfa9c957755cf5_index.html-41")</script><script>(function() {
+  // Ensure this script is executed only once
+  if (window.firebaseAuthBridgeScriptLoaded) {
+    return;
+  }
+  window.firebaseAuthBridgeScriptLoaded = true;
+
+  let nextTokenPromiseId = 0;
+
+  // Stores { resolve, reject } for ongoing token requests
+  const pendingTokenPromises = {};
+
+  // Listen for messages from the Host Application
+  window.addEventListener('message', function(event) {
+
+    const messageData = event.data;
+
+  if (messageData && messageData.type === 'RESOLVE_NEW_FIREBASE_TOKEN') {
+      const { success, token, error, promiseId } = messageData ?? {};
+      if (pendingTokenPromises[promiseId]) {
+        if (success) {
+          pendingTokenPromises[promiseId].resolve(token);
+        } else {
+          pendingTokenPromises[promiseId].reject(new Error(error || 'Token refresh failed from host.'));
+        }
+        delete pendingTokenPromises[promiseId];
+      }
+    }
+  });
+
+  // Expose a function for the Generated App to request a new Firebase token
+  window.requestNewFirebaseToken = function() {
+    const currentPromiseId = nextTokenPromiseId++;
+    const promise = new Promise((resolve, reject) => {
+      pendingTokenPromises[currentPromiseId] = { resolve, reject };
+    });
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({
+        type: 'REQUEST_NEW_FIREBASE_TOKEN',
+        promiseId: currentPromiseId
+      }, '*');
+    } else {
+      pendingTokenPromises[currentPromiseId].reject(new Error('No parent window to request token from.'));
+      delete pendingTokenPromises[currentPromiseId];
+    }
+    return promise;
+  };
+})();</script><script>
+let realOriginalGetUserMedia = null;
+if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+  realOriginalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+}
+
+(function() {
+  if (navigator.mediaDevices && navigator.mediaDevices.__proto__) {
+    try {
+      Object.defineProperty(navigator.mediaDevices.__proto__, 'getUserMedia', {
+        get: function() {
+          return undefined; // Or throw an error
+        },
+        configurable: false
+      });
+    } catch (error) {
+      console.error("Error defining prototype getter:", error);
+    }
+  }
+})();
+
+(function() {
+  const pendingMediaResolvers = {};
+  let nextMediaPromiseId = 0;
+
+  function requestMediaPermissions(constraints) {
+    const mediaPromiseId = nextMediaPromiseId++;
+    const promise = new Promise((resolve, reject) => {
+      pendingMediaResolvers[mediaPromiseId] = (granted) => {
+        delete pendingMediaResolvers[mediaPromiseId];
+        resolve(granted);
+      };
+    });
+
+    window.parent.postMessage({
+      type: 'requestMediaPermission',
+      constraints: constraints,
+      promiseId: mediaPromiseId,
+    }, '*');
+
+    return promise;
+  }
+
+  let originalGetUserMedia = realOriginalGetUserMedia;
+
+  function interceptGetUserMedia() {
+    if (navigator.mediaDevices) {
+      Object.defineProperty(navigator.mediaDevices, 'getUserMedia', {
+        value: function(constraints) {
+          return requestMediaPermissions(constraints).then((granted) => {
+            if (granted) {
+              if (originalGetUserMedia) {
+                return originalGetUserMedia(constraints);
+              } else {
+                throw new Error("Original getUserMedia not available.");
+              }
+            } else {
+              throw new DOMException('Permission denied', 'NotAllowedError');
+            }
+          });
+        },
+        writable: false,
+        configurable: false
+      });
+    }
+  }
+
+  interceptGetUserMedia();
+
+  const observer = new MutationObserver(function(mutationsList, observer) {
+    for (const mutation of mutationsList) {
+      if (mutation.type === 'reconfigured' && mutation.name === 'getUserMedia' && mutation.object === navigator.mediaDevices) {
+        interceptGetUserMedia();
+      } else if (mutation.type === 'attributes' && mutation.attributeName === 'getUserMedia' && mutation.target === navigator.mediaDevices) {
+        interceptGetUserMedia();
+      } else if (mutation.type === 'childList' && mutation.addedNodes) {
+        mutation.addedNodes.forEach(node => {
+          if (node === navigator.mediaDevices) {
+            interceptGetUserMedia();
+          }
+        });
+      }
+    }
+  });
+
+  function interceptSpeechRecognition() {
+    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+      return;
+    }
+
+    const OriginalSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    const SpeechRecognitionWrapper = function(...args) {
+      const recognizer = new OriginalSpeechRecognition(...args);
+      const originalStart = recognizer.start.bind(recognizer);
+
+      recognizer.start = function() {
+        requestMediaPermissions({ audio: true }).then(granted => {
+          if (granted) {
+            originalStart();
+          } else {
+            const errorEvent = new SpeechRecognitionErrorEvent('error');
+            errorEvent.error = 'not-allowed'; // This is the standard error for permission denial.
+            recognizer.dispatchEvent(errorEvent);
+          }
+        });
+      };
+
+      return recognizer;
+    };
+
+    SpeechRecognitionWrapper.prototype = OriginalSpeechRecognition.prototype;
+    SpeechRecognitionWrapper.prototype.constructor = SpeechRecognitionWrapper;
+
+    if (window.SpeechRecognition) {
+      window.SpeechRecognition = SpeechRecognitionWrapper;
+    }
+    if (window.webkitSpeechRecognition) {
+      window.webkitSpeechRecognition = SpeechRecognitionWrapper;
+    }
+  }
+
+  interceptSpeechRecognition();
+
+  window.addEventListener('message', function(event) {
+    if (event.data) {
+      if (event.data.type === 'resolveMediaPermission') {
+        const { promiseId, granted } = event.data;
+        if (pendingMediaResolvers[promiseId]) {
+          pendingMediaResolvers[promiseId](granted);
+        }
+      }
+    }
+  });
+
+})();</script><script>((function(modelInformation) {
+  const originalFetch = window.fetch;
+  // TODO: b/421908508 - Move these out of the script and match all generative AI model calls.
+  let googleLlmBaseApiUrls = [
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.textModelName + ':streamGenerateContent',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.textModelName + ':generateContent',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageModelName + ':predict',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageModelName + ':predictLongRunning',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageEditModelName + ':generateContent',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.videoModelName + ':predict',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.videoModelName + ':predictLongRunning',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.ttsModelName + ':generateContent',
+  ];
+  modelInformation.deprecatedTextModelNames.forEach((modelName) => {
+    googleLlmBaseApiUrls.push(
+      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':streamGenerateContent',
+      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':generateContent',
+    );
+  });
+
+  const pendingFetchResolvers = {};
+  let nextPromiseId = 0;
+
+  function handleStringInput(input, optionsArgument) {
+    const actualUrl = input;
+    const fetchCallArgs = [actualUrl, optionsArgument];
+    const effectiveOptions = optionsArgument || {};
+    const bodyForApiKeyCheck = effectiveOptions.body;
+    const bodyForPostMessage = effectiveOptions.body;
+    return { actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage };
+  }
+
+  function handleRequestInput(input, optionsArgument) {
+    const actualUrl = input.url;
+    const fetchCallArgs = [input, optionsArgument];
+    const effectiveOptions = { method: input.method, headers: new Headers(input.headers) };
+    let bodyForApiKeyCheck;
+    let bodyForPostMessage;
+
+    if (optionsArgument) {
+      if (optionsArgument.method) effectiveOptions.method = optionsArgument.method;
+      if (optionsArgument.headers) effectiveOptions.headers = new Headers(optionsArgument.headers);
+      if ('body' in optionsArgument) {
+        bodyForApiKeyCheck = optionsArgument.body;
+        bodyForPostMessage = optionsArgument.body;
+      } else {
+        bodyForApiKeyCheck = undefined;
+        bodyForPostMessage = input.body;
+      }
+    } else {
+      bodyForApiKeyCheck = undefined;
+      bodyForPostMessage = input.body;
+    }
+    return { actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage };
+  }
+
+  window.fetch = function(input, optionsArgument) {
+    let actualUrl;
+    let fetchCallArgs;
+    let effectiveOptions = {};
+    let bodyForApiKeyCheck;
+    let bodyForPostMessage;
+
+    if (typeof input === 'string') {
+      ({actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage} = handleStringInput(input, optionsArgument));
+    } else if (input instanceof Request) {
+      ({actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage} = handleRequestInput(input, optionsArgument));
+    } else {
+      return originalFetch.apply(window, [input, optionsArgument]);
+    }
+
+    effectiveOptions.method = effectiveOptions.method || 'GET';
+    if (!effectiveOptions.headers) {
+      effectiveOptions.headers = new Headers();
+    }
+
+
+    if (typeof actualUrl === 'string' && googleLlmBaseApiUrls.some((url) => actualUrl.startsWith(url))) {
+      let apiKeyIsNull = true;
+
+      const regex = new RegExp("models/([^:]+)");
+      const modelNameMatch = actualUrl.match(regex);
+      const modelName = modelNameMatch ? modelNameMatch[1] : 'unspecified';
+
+
+      try {
+        const urlObject = new URL(actualUrl);  // Use URL object for robust parsing
+        const apiKeyParam = urlObject.searchParams.get('key');
+        if (apiKeyParam) {
+          apiKeyIsNull = false;
+        }
+      } catch (e) {
+        // Continue checks even if URL parsing fails
+      }
+
+      if (apiKeyIsNull && effectiveOptions.headers) {
+        const h = new Headers(effectiveOptions.headers);
+        const apiKeyHeaderValue = h.get('X-API-Key') || h.get('x-api-key');
+        if (apiKeyHeaderValue) {
+          apiKeyIsNull = false;
+          return originalFetch.apply(window, fetchCallArgs);
+        }
+      }
+
+      if (apiKeyIsNull && effectiveOptions.method && ['POST', 'PUT', 'PATCH'].includes(effectiveOptions.method.toUpperCase()) && typeof bodyForApiKeyCheck === 'string') {
+        try {
+          const bodyData = JSON.parse(bodyForApiKeyCheck);
+          if (bodyData && bodyData.apiKey) {
+            apiKeyIsNull = false;
+            return originalFetch.apply(window, fetchCallArgs);
+          }
+        } catch (e) {
+          // Ignore JSON parsing errors
+        }
+      }
+
+      if(apiKeyIsNull) {
+        const promiseId = nextPromiseId++;
+        const promise = new Promise((resolve) => {
+          pendingFetchResolvers[promiseId] = (resolvedResponse) => {
+            delete pendingFetchResolvers[promiseId];
+            resolve(resolvedResponse);
+          };
+        });
+
+        let serializedBodyForPostMessage;
+        if (typeof bodyForPostMessage === 'string' || bodyForPostMessage == null) {
+            serializedBodyForPostMessage = bodyForPostMessage;
+        } else if (bodyForPostMessage instanceof ReadableStream) {
+            serializedBodyForPostMessage = null;
+        } else {
+            try {
+                serializedBodyForPostMessage = JSON.stringify(bodyForPostMessage);
+            } catch (e) {
+                serializedBodyForPostMessage = null;
+            }
+        }
+
+        const messageOptions = {
+            method: effectiveOptions.method,
+            headers: Object.fromEntries(new Headers(effectiveOptions.headers).entries()),
+            body: serializedBodyForPostMessage
+        };
+
+        window.parent.postMessage({
+          type: 'requestFetch',
+          url: actualUrl,
+          modelName: modelName,
+          options: messageOptions,
+          promiseId: promiseId,
+        }, '*');
+
+        return promise;
+      }
+      return originalFetch.apply(window, fetchCallArgs);
+    }
+    return originalFetch.apply(window, fetchCallArgs);
+  };
+
+  window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'resolveFetch') {
+      const { promiseId, response } = event.data;
+      if (pendingFetchResolvers[promiseId]) {
+        try {
+          const reconstructedResponse = new Response(response.body, {
+            status: response.status,
+            statusText: response.statusText,
+            headers: new Headers(response.headers),
+          });
+          pendingFetchResolvers[promiseId](reconstructedResponse);
+        } catch (error) {
+          pendingFetchResolvers[promiseId](new Response(null, { status: 500, statusText: "Interceptor Response Reconstruction Error" }));
+        }
+      }
+    }
+  });
+
+}))({"textModelName":"gemini-2.5-flash-preview-05-20","imageModelName":"imagen-3.0-generate-002","imageEditModelName":"gemini-2.5-flash-image-preview","videoModelName":"veo-2.0-generate-001","ttsModelName":"gemini-2.5-flash-preview-tts","deprecatedTextModelNames":["gemini-2.0-flash","gemini-2.5-flash-preview-04-17"]})</script><script>(function() {
+  const originalConsoleLog = console.log;
+  const originalConsoleError = console.error;
+
+    /**
+   * Normalizes an error event or a promise rejection reason into a structured error object.
+   * @param {*} errorEventOrReason The error object or reason.
+   * @return {object} Structured error data { message, name, stack }.
+   */
+  function getErrorObject(errorEventOrReason) {
+    if (errorEventOrReason instanceof Error) {
+      return {
+        message: errorEventOrReason.message,
+        name: errorEventOrReason.name,
+        stack: errorEventOrReason.stack,
+      };
+    }
+    // Fallback for non-Error objects.
+    try {
+      return {
+        message: JSON.stringify(errorEventOrReason),
+        name: 'UnknownErrorType',
+        stack: null,
+      };
+    } catch (e) {
+      return {
+        message: String(errorEventOrReason),
+        name: 'UnknownErrorTypeNonStringifiable',
+        stack: null,
+      };
+    }
+  }
+
+  /**
+   * Converts an array of arguments (from log/error) into a single string.
+   * Handles Error objects specially to include their message and stack.
+   * @param {Array<*>} args - Arguments passed to console methods.
+   * @return {string} A string representation of the arguments.
+   */
+  function stringifyArgs(args) {
+    return args
+      .map((arg) => {
+        if (arg instanceof Error) {
+          const {message, stack} = arg;
+          return `Error: ${message}${stack ? ('\nStack: ' + stack) : ''}`;
+        }
+        if (typeof arg === 'object' && arg !== null) {
+          try {
+            return JSON.stringify(arg);
+          } catch (error) {
+            return '[Circular Object]';
+          }
+        } else {
+          return String(arg);
+        }
+      })
+      .join(' ');
+  }
+
+  console.log = function(...args) {
+    const logString = stringifyArgs(args);
+    window.parent.postMessage({ type: 'log', message: logString }, '*');
+    originalConsoleLog.apply(console, args);
+  };
+
+  console.error = function(...args) {
+    let errorData;
+    if (args.length > 0 && args[0] instanceof Error) {
+      const err = args[0];
+      // If the first arg is an Error, capture its details.
+      errorData = {
+        type: 'error',
+        source: 'CONSOLE_ERROR',
+        ...getErrorObject(err),
+        rawArgsString: stringifyArgs(args.slice(1)),
+        timestamp: new Date().toISOString(),
+      };
+    } else {
+      // If not an Error object, treat all args as a general error message.
+      errorData = {
+        type: 'error',
+        source: 'CONSOLE_ERROR',
+        message: stringifyArgs(args),
+        name: 'ConsoleLoggedError',
+        stack: null,
+        timestamp: new Date().toISOString(),
+      };
+    }
+    window.parent.postMessage(errorData, '*');
+    originalConsoleError.apply(console, args);
+  };
+
+  // Listen for global unhandled synchronous errors.
+  window.addEventListener('error', function(event) {
+    const errorDetails = event.error ? getErrorObject(event.error) : {
+      message: event.message,
+      name: 'GlobalError',
+      stack: null,
+      filename: event.filename,
+      lineno: event.lineno,
+      colno: event.colno,
+    };
+
+    window.parent.postMessage({
+      type: 'error',
+      source: 'global',
+      ...errorDetails,
+      message: errorDetails.message || event.message,
+      timestamp: new Date().toISOString(),
+    }, '*');
+  });
+
+  // Listen for unhandled promise rejections (asynchronous errors).
+  window.addEventListener('unhandledrejection', function(event) {
+    const errorDetails = getErrorObject(event.reason);
+
+    window.parent.postMessage({
+      type: 'error',
+      source: 'unhandledrejection',
+      ...errorDetails,
+      message: errorDetails.message || 'Unhandled Promise Rejection',
+      timestamp: new Date().toISOString(),
+    }, '*');
+  });
+
+})();</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025 北海道九天八夜</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .card {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            background-color: #fff;
+        }
+        .pill-tab-button {
+            border-radius: 9999px;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+            border: 1px solid transparent;
+        }
+        .pill-tab-button.active {
+            background-color: #f8fafc;
+            border-color: #e2e8f0;
+            color: #4b5563;
+        }
+        .pill-tab-button:hover:not(.active) {
+            background-color: #f1f5f9;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #e2e8f0;
+            text-align: left;
+        }
+        th {
+            background-color: #f8fafc;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        tr:hover {
+            background-color: #e2e8f0;
+        }
+        .collapsible-header {
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.2s ease;
+        }
+        .collapsible-header:hover {
+            background-color: #f1f5f9;
+        }
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+        }
+        .collapsible-content.open {
+            max-height: 1000px; /* Adjust as needed for content height */
+        }
+        .chevron {
+            transition: transform 0.3s ease;
+        }
+        .chevron.rotated {
+            transform: rotate(180deg);
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.mx-auto{margin-left:auto;margin-right:auto}.mb-2{margin-bottom:0.5rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.ml-6{margin-left:1.5rem}.flex{display:flex}.grid{display:grid}.h-6{height:1.5rem}.w-6{width:1.5rem}.w-full{width:100%}.max-w-4xl{max-width:56rem}.flex-1{flex:1 1 0%}.list-disc{list-style-type:disc}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-2{gap:0.5rem}.gap-4{gap:1rem}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.rounded-b-lg{border-bottom-right-radius:0.5rem;border-bottom-left-radius:0.5rem}.rounded-t-lg{border-top-left-radius:0.5rem;border-top-right-radius:0.5rem}.border{border-width:1px}.bg-blue-500{--tw-bg-opacity:1;background-color:rgb(59 130 246 / var(--tw-bg-opacity, 1))}.bg-gray-100{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.bg-gray-50{--tw-bg-opacity:1;background-color:rgb(249 250 251 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.p-2{padding:0.5rem}.p-4{padding:1rem}.px-4{padding-left:1rem;padding-right:1rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.text-center{text-align:center}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.font-bold{font-weight:700}.font-semibold{font-weight:600}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity, 1))}.text-gray-700{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.text-gray-800{--tw-text-opacity:1;color:rgb(31 41 55 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-300{transition-duration:300ms}.ease-in-out{transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1)}.hover\:bg-blue-600:hover{--tw-bg-opacity:1;background-color:rgb(37 99 235 / var(--tw-bg-opacity, 1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}@media (min-width: 768px){.md\:flex-none{flex:none}.md\:justify-start{justify-content:flex-start}.md\:p-6{padding:1.5rem}.md\:p-8{padding:2rem}.md\:text-4xl{font-size:2.25rem;line-height:2.5rem}}@media (min-width: 1024px){.lg\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}}</style></head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">2025 北海道九天八夜</h1>
+            <p class="text-gray-600">一趟冬季的探索與發現之旅</p>
+        </header>
+
+        <div class="card rounded-xl p-4 md:p-8">
+            <div class="flex flex-wrap justify-center md:justify-start gap-2 p-2 bg-gray-100 rounded-full mb-6">
+                <button id="tab-overview" class="pill-tab-button flex-1 md:flex-none text-center text-gray-600 font-semibold focus:outline-none active">
+                    旅程總覽
+                </button>
+                <button id="tab-expenses" class="pill-tab-button flex-1 md:flex-none text-center text-gray-600 font-semibold focus:outline-none">
+                    費用分析
+                </button>
+                <button id="tab-restaurants" class="pill-tab-button flex-1 md:flex-none text-center text-gray-600 font-semibold focus:outline-none">
+                    餐廳推薦
+                </button>
+                <button id="tab-itinerary" class="pill-tab-button flex-1 md:flex-none text-center text-gray-600 font-semibold focus:outline-none">
+                    詳細行程
+                </button>
+                <button id="tab-lodging" class="pill-tab-button flex-1 md:flex-none text-center text-gray-600 font-semibold focus:outline-none">
+                    住宿資訊
+                </button>
+            </div>
+
+            <div id="content-overview" class="tab-content bg-white rounded-b-lg p-4 md:p-6 active">
+                <div class="mb-6">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-700">核心資訊</h2>
+                    <p class="text-gray-500 mb-6">
+                        此處彙整了本次北海道九天八夜自由行的所有關鍵資訊，從預算分配到每日行程安排。您可以透過頂部導覽列探索不同部分，旨在讓旅途規劃與參考變得更加輕鬆便利。
+                    </p>
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 text-center">
+                        <div class="bg-gray-100 p-4 rounded-xl">
+                            <h3 class="font-bold text-gray-700">9天8夜</h3>
+                            <p class="text-sm text-gray-500">行程時長</p>
+                        </div>
+                        <div class="bg-gray-100 p-4 rounded-xl">
+                            <h3 class="font-bold text-gray-700">1/18-1/26</h3>
+                            <p class="text-sm text-gray-500">2025 冬季</p>
+                        </div>
+                        <div class="bg-gray-100 p-4 rounded-xl">
+                            <h3 class="font-bold text-gray-700">札幌進/函館出</h3>
+                            <p class="text-sm text-gray-500">主要路線</p>
+                        </div>
+                        <div class="bg-gray-100 p-4 rounded-xl">
+                            <h3 class="font-bold text-gray-700">NT$ 50,622</h3>
+                            <p class="text-sm text-gray-500">預估費用/人</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="download-button" class="w-full text-center py-2 px-4 rounded-lg bg-blue-500 text-white font-bold hover:bg-blue-600 transition duration-300 ease-in-out mb-6">下載行程</button>
+
+                <div class="mb-6">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-700">航班資訊</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>日期</th>
+                                    <th>行程時間</th>
+                                    <th>航班</th>
+                                    <th>價錢</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1/18</td>
+                                    <td>11:10-16:00</td>
+                                    <td>TR892</td>
+                                    <td>9630(永翔)</td>
+                                </tr>
+                                <tr>
+                                    <td>1/26</td>
+                                    <td>18:00-21:35</td>
+                                    <td>JX861</td>
+                                    <td>13488(永翔)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-700">行程總覽</h2>
+                    <div class="p-4 rounded-xl bg-gray-50">
+                        <ul class="list-disc ml-6 space-y-2 text-gray-600">
+                            <li><span class="font-semibold">第一天 (1/17)</span>：台南 &gt; 桃園，準備出發。</li>
+                            <li><span class="font-semibold">第二天 (1/18)</span>：桃園 &gt; 札幌，抵達後前往飯店並逛狸小路。</li>
+                            <li><span class="font-semibold">第三天 (1/19)</span>：札幌市區一日遊，參觀北海道神宮與圓山動物園。</li>
+                            <li><span class="font-semibold">第四天 (1/20)</span>：札幌近郊，遊覽白色戀人與札幌啤酒工廠。</li>
+                            <li><span class="font-semibold">第五天 (1/21)</span>：札幌市區，前往火腿巨蛋並欣賞藻岩山夜景。</li>
+                            <li><span class="font-semibold">第六天 (1/22)</span>：小樽一日遊。</li>
+                            <li><span class="font-semibold">第七天 (1/23)</span>：札幌 &gt; 洞爺湖，遊覽登別地獄谷、溫泉街。</li>
+                            <li><span class="font-semibold">第八天 (1/24)</span>：洞爺湖 &gt; 函館，前往五稜郭。</li>
+                            <li><span class="font-semibold">第九天 (1/25)</span>：函館市區觀光，逛朝市、金森倉庫群並欣賞函館山夜景。</li>
+                            <li><span class="font-semibold">第十天 (1/26)</span>：函館 &gt; 回國。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="content-expenses" class="tab-content p-4 md:p-6 bg-white rounded-b-lg">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-700">已知費用</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>項目</th>
+                                <th>詳細</th>
+                                <th>價錢(一人)</th>
+                                <th>備註</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>機票</td>
+                                <td>札幌進函館出(來回)</td>
+                                <td>23118</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>高鐵</td>
+                                <td>台南&gt;桃園</td>
+                                <td>1190</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>桃園包車回台南</td>
+                                <td>桃園&gt;台南</td>
+                                <td>2300</td>
+                                <td>基本單程5600 隨地點加錢</td>
+                            </tr>
+                            <tr>
+                                <td>北海道 JR PASS</td>
+                                <td>五日卷</td>
+                                <td>4541</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>住宿</td>
+                                <td>京王Prelia酒店 札幌</td>
+                                <td>9385</td>
+                                <td>五晚</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>The Lake Suit湖之栖</td>
+                                <td>7214</td>
+                                <td>一晚</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>OMO5 函館</td>
+                                <td>4063</td>
+                                <td>兩晚</td>
+                            </tr>
+                            <tr>
+                                <td>eSIM</td>
+                                <td>DJB 九天無限流量</td>
+                                <td>1130</td>
+                                <td>DJB E-SIM</td>
+                            </tr>
+                            <tr>
+                                <td>旅平險</td>
+                                <td>富邦</td>
+                                <td>1700</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="content-restaurants" class="tab-content p-4 md:p-6 bg-white rounded-b-lg">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-700">餐廳推薦</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>類別</th>
+                                <th>店名</th>
+                                <th>地址</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>海鮮丼</td>
+                                <td>Sapporo Kaisen-don Senmon Ten Sushi Donburi</td>
+                                <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&amp;query=Chuo%20Ward%2C%20Minami%203%20Jonishi%2C%205%20Chome-24%20%E3%81%8B%E3%82%89%E3%81%8F%E3%81%95%E3%83%9B%E3%83%86%E3%83%AB%201F" target="_blank">Chuo Ward, Minami 3 Jonishi, 5 Chome-24 からくさホテル 1F</a></td>
+                            </tr>
+                            <tr>
+                                <td>迴轉壽司</td>
+                                <td>根室花丸 JR Tower</td>
+                                <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&amp;query=Chuo%20Ward%2C%20Kita%205%20Jonishi%2C%204%20Chome%20JR%E3%82%BF%E3%83%AF%E3%83%BC%E3%82%B9%E3%83%86%E3%83%A9%E3%83%97%E3%83%AC%E3%82%A4%E3%82%B9%206%E9%9A%8E" target="_blank">Chuo Ward, Kita 5 Jonishi, 4 Chome JRタワーステラプレイス 6階</a></td>
+                            </tr>
+                            <tr>
+                                <td>燒肉</td>
+                                <td>北海道燒肉 北牛</td>
+                                <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&amp;query=4%20Chome-5-7%20Minami%206%20Jonishi%2C%20Chuo%20Ward%2C%20Sapporo" target="_blank">4 Chome-5-7 Minami 6 Jonishi, Chuo Ward, Sapporo</a></td>
+                            </tr>
+                            <tr>
+                                <td>湯咖哩</td>
+                                <td>奥芝商店湯咖哩</td>
+                                <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&amp;query=Sapporo%2C%20Chuo%20Ward%2C%20Kita%204%20Jonishi%2C%201%20Chome%20%E3%83%9B%E3%82%AF%E3%83%AC%E3%83%B3%E3%83%93%E3%83%AB%20B1F%20%E3%83%91%E3%83%BC%E3%83%AB%E3%82%BF%E3%82%A6%E3%83%B3" target="_blank">Sapporo, Chuo Ward, Kita 4 Jonishi, 1 Chome ホクレンビル B1F パールタウン</a></td>
+                            </tr>
+                            <tr>
+                                <td>成吉思汗</td>
+                                <td>大黒屋 函館五稜郭店</td>
+                                <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&amp;query=23-5%20Honcho%2C%20Hakodate" target="_blank">23-5 Honcho, Hakodate</a></td>
+                            </tr>
+                            <tr>
+                                <td>燒鳥</td>
+                                <td>鳥辰十字街店</td>
+                                <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&amp;query=7-7%20Suehirocho%2C%20Hakodate%2C%20Hokkaido" target="_blank">7-7 Suehirocho, Hakodate, Hokkaido</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="content-itinerary" class="tab-content p-4 md:p-6 bg-white rounded-b-lg">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-700">行程</h2>
+                <div class="space-y-6">
+                    <!-- Day 1 -->
+                    <div class="border rounded-lg">
+                        <div class="collapsible-header p-4 flex justify-between items-center bg-gray-50 rounded-t-lg">
+                            <h3 class="text-lg font-bold text-gray-800">1/17 (六) - 台南 &gt; 桃園</h3>
+                            <svg class="chevron w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                        <div class="collapsible-content p-4">
+                            <ul class="list-disc ml-6 space-y-2">
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Day 2 -->
+                    <div class="border rounded-lg">
+                        <div class="collapsible-header p-4 flex justify-between items-center bg-gray-50 rounded-t-lg">
+                            <h3 class="text-lg font-bold text-gray-800">1/18 (日) - 桃園 &gt; 札幌</h3>
+                            <svg class="chevron w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                        <div class="collapsible-content p-4">
+                            <ul class="list-disc ml-6 space-y-2">
+                                <li><span class="font-semibold">05:00:</span> 起床</li>
+                                <li><span class="font-semibold">09:20-14:00:</span> 桃園飛新千歲機場</li>
+                                <li><span class="font-semibold">14:30-15:30:</span> 坐巴士到札幌薄野站</li>
+                                <li><span class="font-semibold">16:00-16:30:</span> 京王Prelia酒店 CHICK IN (休息一下)</li>
+                                <li><span class="font-semibold">16:30-19:00:</span> 逛狸小路 (海鮮丼)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Day 3 -->
+                    <div class="border rounded-lg">
+                        <div class="collapsible-header p-4 flex justify-between items-center bg-gray-50 rounded-t-lg">
+                            <h3 class="text-lg font-bold text-gray-800">1/19 (-) - 札幌市內</h3>
+                            <svg class="chevron w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                        <div class="collapsible-content p-4">
+                            <ul class="list-disc ml-6 space-y-2">
+                                <li><span class="font-semibold">07:30:</span> 起床</li>
+                                <li><span class="font-semibold">8:30-11:00:</span> 北海道神宮 &gt; 圓山公園 &gt; 圓山動物園</li>
+                                <li><span class="font-semibold">11:30-13:00:</span> 午餐 (根室花丸11點前要到店拿號碼牌)</li>
+                                <li><span class="font-semibold">13:00-14:30:</span> 北海道大學 &gt; 看恐龍化石</li>
+                                <li><span class="font-semibold">14:30-16:30:</span> 大通公園 &gt; 電視塔</li>
+                                <li><span class="font-semibold">18:00:</span> 晚餐</li>
+                                <li><span class="font-semibold">19:00:</span> 回飯店</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Day 4 -->
+                    <div class="border rounded-lg">
+                        <div class="collapsible-header p-4 flex justify-between items-center bg-gray-50 rounded-t-lg">
+                            <h3 class="text-lg font-bold text-gray-800">1/20 (二) - 札幌市周邊</h3>
+                            <svg class="chevron w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                        <div class="collapsible-content p-4">
+                            <ul class="list-disc ml-6 space-y-2">
+                                <li><span class="font-semibold">08:00:</span> 起床</li>
+                                <li><span class="font-semibold">09:15-10:00:</span> 札幌車站 &gt; 白色戀人工廠</li>
+                                <li><span class="font-semibold">10:00-12:00:</span> 白色戀人工廠</li>
+                                <li><span class="font-semibold">12:00-12:45:</span> 白色戀人工廠 &gt; 札幌啤酒工廠 (坐計程車車資約3700日圓或坐地鐵)</li>
+                                <li><span class="font-semibold">13:00-14:00:</span> 工廠內吃午餐</li>
+                                <li><span class="font-semibold">14:30-17:30:</span> 逛札幌啤酒工廠</li>
+                                <li><span class="font-semibold">17:30-18:10:</span> 前往札幌車站 (領JR PASS)</li>
+                                <li><span class="font-semibold">18:30:</span> 奥芝商店湯咖哩</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Day 5 -->
+                    <div class="border rounded-lg">
+                        <div class="collapsible-header p-4 flex justify-between items-center bg-gray-50 rounded-t-lg">
+                            <h3 class="text-lg font-bold text-gray-800">1/21 (三) - 札幌市周邊</h3>
+                            <svg class="chevron w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                        <div class="collapsible-content p-4">
+                            <ul class="list-disc ml-6 space-y-2">
+                                <li><span class="font-semibold">08:00:</span> 起床</li>
+                                <li><span class="font-semibold">09:00:</span> 前往火腿巨蛋</li>
+                                <li><span class="font-semibold">10:30:</span> 火腿巨蛋導覽 (一個小時)</li>
+                                <li><span class="font-semibold">12:00-13:30:</span> 午餐</li>
+                                <li><span class="font-semibold">13:30-14:30:</span> 火腿巨蛋 &gt; 札幌車站</li>
+                                <li><span class="font-semibold">14:30-15:00:</span> 札幌車站 T38 展望台 (JR車站可以買伴手禮)</li>
+                                <li><span class="font-semibold">15:00-18:00:</span> 前往藻岩山夜景 (車資約5100日幣)</li>
+                                <li><span class="font-semibold">18:00-19:00:</span> 狸小路附近吃飯 (北海道燒肉 北牛 KITAUSHI)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Day 6 -->
+                    <div class="border rounded-lg">
+                        <div class="collapsible-header p-4 flex justify-between items-center bg-gray-50 rounded-t-lg">
+                            <h3 class="text-lg font-bold text-gray-800">1/22 (四) - 小樽</h3>
+                            <svg class="chevron w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                        <div class="collapsible-content p-4">
+                            <ul class="list-disc ml-6 space-y-2">
+                                <li><span class="font-semibold">07:00:</span> 起床</li>
+                                <li><span class="font-semibold">08:06-08:53:</span> 札幌 &gt; 小樽</li>
+                                <li><span class="font-semibold">09:07-10:11:</span> 小樽車站 &gt; 天狗山展望台</li>
+                                <li><span class="font-semibold">10:11-11:30:</span> 天狗山展望台</li>
+                                <li><span class="font-semibold">11:36-12:26:</span> 天狗山展望台 &gt; 小樽車站</li>
+                                <li><span class="font-semibold">12:30-14:00:</span> 午餐覓食 (三角市場或若雞時代)</li>
+                                <li><span class="font-semibold">14:00-17:00:</span> 逛小樽附近景點</li>
+                                <li><span class="font-semibold">17:00-17:33:</span> 小樽 &gt; 札幌</li>
+                                <li><span class="font-semibold">18:00:</span> 晚餐覓食</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Day 7 -->
+                    <div class="border rounded-lg">
+                        <div class="collapsible-header p-4 flex justify-between items-center bg-gray-50 rounded-t-lg">
+                            <h3 class="text-lg font-bold text-gray-800">1/23 (五) - 札幌 &gt; 洞爺湖</h3>
+                            <svg class="chevron w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                        <div class="collapsible-content p-4">
+                            <ul class="list-disc ml-6 space-y-2">
+                                <li><span class="font-semibold">06:00:</span> 起床</li>
+                                <li><span class="font-semibold">07:00:</span> 前往札幌車站</li>
+                                <li><span class="font-semibold">07:30-08:44:</span> 札幌車站 &gt; 登別車站 (交通參考 需要在車站寄放行李)</li>
+                                <li><span class="font-semibold">08:52-09:30:</span> 搭公車前往登別地獄谷</li>
+                                <li><span class="font-semibold">09:30-11:00:</span> 逛登別地獄谷</li>
+                                <li><span class="font-semibold">11:00-12:10:</span> 吃午餐</li>
+                                <li><span class="font-semibold">12:15-12:50:</span> 回登別車站</li>
+                                <li><span class="font-semibold">13:28-14:08:</span> 登別 &gt; 洞爺車站 (火車"北斗號")</li>
+                                <li><span class="font-semibold">14:28-15:00:</span> 洞爺車站 &gt; 飯店 CHECK IN (車資約3100*2)</li>
+                                <li><span class="font-semibold">15:00-18:30:</span> 筒倉展望台 &gt; 溫泉街逛街 (來回車資約8000 洞爺湖越後屋)</li>
+                                <li><span class="font-semibold">18:30:</span> 吃飯</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Day 8 -->
+                    <div class="border rounded-lg">
+                        <div class="collapsible-header p-4 flex justify-between items-center bg-gray-50 rounded-t-lg">
+                            <h3 class="text-lg font-bold text-gray-800">1/24 (六) - 洞爺湖 &gt; 函館</h3>
+                            <svg class="chevron w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                        <div class="collapsible-content p-4">
+                            <ul class="list-disc ml-6 space-y-2">
+                                <li><span class="font-semibold">07:30-08:45:</span> 起床吃早餐</li>
+                                <li><span class="font-semibold">09:00-10:00:</span> 坐遊覽船 (來回車資約8000)</li>
+                                <li><span class="font-semibold">11:00:</span> 回飯店拿行李去洞爺車站 (車資約3100*2)</li>
+                                <li><span class="font-semibold">11:30-12:40:</span> 車站附近吃午餐</li>
+                                <li><span class="font-semibold">12:51-14:41:</span> 洞爺 &gt; 函館 (OMO5 放行李)</li>
+                                <li><span class="font-semibold">15:30-17:30:</span> 五稜郭 (日落有點燈活動)</li>
+                                <li><span class="font-semibold">18:00:</span> 五稜郭附近吃晚餐 (大黒屋 函館五稜郭店)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Day 9 -->
+                    <div class="border rounded-lg">
+                        <div class="collapsible-header p-4 flex justify-between items-center bg-gray-50 rounded-t-lg">
+                            <h3 class="text-lg font-bold text-gray-800">1/25 (日) - 函館</h3>
+                            <svg class="chevron w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                        <div class="collapsible-content p-4">
+                            <ul class="list-disc ml-6 space-y-2">
+                                <li><span class="font-semibold">08:00:</span> 起床</li>
+                                <li><span class="font-semibold">09:00:</span> 函館朝市</li>
+                                <li><span class="font-semibold">10:00-11:30:</span> 金森紅磚倉庫群</li>
+                                <li><span class="font-semibold">11:30-13:00:</span> 午餐 (小丑漢堡)</li>
+                                <li><span class="font-semibold">13:30-15:00:</span> 八幡坂 &gt; 函館教堂群 &gt; 函館山纜車</li>
+                                <li><span class="font-semibold">15:00-16:30:</span> 函館夜景</li>
+                                <li><span class="font-semibold">17:00:</span> 鳥辰十字街店 (燒鳥)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Day 10 -->
+                    <div class="border rounded-lg">
+                        <div class="collapsible-header p-4 flex justify-between items-center bg-gray-50 rounded-t-lg">
+                            <h3 class="text-lg font-bold text-gray-800">1/26 (-) - 函館 &gt; 回國</h3>
+                            <svg class="chevron w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                        <div class="collapsible-content p-4">
+                            <ul class="list-disc ml-6 space-y-2">
+                                <li><span class="font-semibold">08:30:</span> 起床吃早餐 (退房行李寄放飯店)</li>
+                                <li><span class="font-semibold">09:30-11:00:</span> 函館市熱帶植物園 (或者去大沼國家公園)</li>
+                                <li><span class="font-semibold">14:30:</span> 回飯店拿行李</li>
+                                <li><span class="font-semibold">15:00:</span> 前往機場報到</li>
+                                <li><span class="font-semibold">18:00-21:35:</span> 回國</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="content-lodging" class="tab-content p-4 md:p-6 bg-white rounded-b-lg">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-700">住宿</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>日期</th>
+                                <th>飯店</th>
+                                <th>地址</th>
+                                <th>價錢</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1/18-1/23</td>
+                                <td>京王Prelia酒店</td>
+                                <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&amp;query=4%20Chome-11-1%20Kita%208%20Jonishi%2C%20Kita%20Ward%2C%20Sapporo%2C%20Hokkaido%20060-0808" target="_blank">4 Chome-11-1 Kita 8 Jonishi, Kita Ward, Sapporo, Hokkaido 060-0808</a></td>
+                                <td>28156(平)</td>
+                            </tr>
+                            <tr>
+                                <td>1/23-1/24</td>
+                                <td>The Lake Suit湖之栖</td>
+                                <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&amp;query=7-1%20Toyakoonsen%2C%20Sobetsu%2C%20Usu%20District%2C%20Hokkaido%20049-5731%E6%97%A5%E6%9C%AC" target="_blank">7-1 Toyakoonsen, Sobetsu, Usu District, Hokkaido 049-5731日本</a></td>
+                                <td>21643(平)</td>
+                            </tr>
+                            <tr>
+                                <td>1/24-1/26</td>
+                                <td>OMO5 函館</td>
+                                <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&amp;query=24-1%20Wakamatsucho%2C%20Hakodate%2C%20Hokkaido%20040-0063%E6%97%A5%E6%9C%AC" target="_blank">24-1 Wakamatsucho, Hakodate, Hokkaido 040-0063日本</a></td>
+                                <td>12189(平)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabs = document.querySelectorAll('.pill-tab-button');
+            const contents = document.querySelectorAll('.tab-content');
+            const downloadButton = document.getElementById('download-button');
+
+            // Set initial active tab and content based on ID
+            function setActiveTab(tabId) {
+                const targetId = tabId.replace('tab-', 'content-');
+                
+                tabs.forEach(item => item.classList.remove('active'));
+                contents.forEach(item => item.classList.remove('active'));
+
+                document.getElementById(tabId).classList.add('active');
+                document.getElementById(targetId).classList.add('active');
+            }
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    setActiveTab(tab.id);
+                });
+            });
+
+            // Handle collapsible itinerary sections
+            const collapsibleHeaders = document.querySelectorAll('.collapsible-header');
+            collapsibleHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const chevron = header.querySelector('.chevron');
+                    
+                    if (content.classList.contains('open')) {
+                        content.classList.remove('open');
+                        chevron.classList.remove('rotated');
+                    } else {
+                        document.querySelectorAll('.collapsible-content.open').forEach(c => c.classList.remove('open'));
+                        document.querySelectorAll('.chevron.rotated').forEach(c => c.classList.remove('rotated'));
+
+                        content.classList.add('open');
+                        chevron.classList.add('rotated');
+                    }
+                });
+            });
+
+            // Download functionality
+            downloadButton.addEventListener('click', () => {
+                const htmlContent = document.documentElement.outerHTML;
+                const blob = new Blob([htmlContent], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = '北海道旅遊規劃.html';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+
+            // Initial active state
+            setActiveTab('tab-overview');
+        });
+    </script>
+
+
+</body></html>
