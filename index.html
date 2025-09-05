@@ -145,7 +145,7 @@
 
     <!-- 新增：最後更新時間的標籤 -->
     <div class="update-timestamp">
-        <span id="last-updated-time"></span>
+        <span id="last-updated-time">最後更新時間：2025/09/05 19:37</span>
     </div>
 
     <div class="max-w-4xl mx-auto">
@@ -529,20 +529,6 @@
             const closeButton = document.querySelector('.close-button');
             const modalTitle = document.getElementById('modal-title');
             const modalDetailsList = document.getElementById('modal-details-list');
-            const lastUpdatedElement = document.getElementById('last-updated-time');
-
-            // 實作自動更新最後更新時間的函數
-            function updateLastUpdatedTime() {
-                const now = new Date();
-                const year = now.getFullYear();
-                const month = (now.getMonth() + 1).toString().padStart(2, '0');
-                const day = now.getDate().toString().padStart(2, '0');
-                const hours = now.getHours().toString().padStart(2, '0');
-                const minutes = now.getMinutes().toString().padStart(2, '0');
-                const formattedTime = `${year}/${month}/${day} ${hours}:${minutes}`;
-                
-                lastUpdatedElement.textContent = `最後更新時間：${formattedTime}`;
-            }
 
             // Define main expense data for the pie chart
             const expensesData = [
@@ -705,8 +691,6 @@
 
             // Initial active state
             setActiveTab('tab-overview');
-            // 當頁面載入時，立即更新時間
-            updateLastUpdatedTime();
         });
     </script>
 </body>
