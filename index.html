@@ -124,29 +124,9 @@
         .modal-details li {
             padding: 4px 0;
         }
-        
-        /* 新增：最後更新時間的樣式 */
-        .update-timestamp {
-            position: absolute; /* 相對於父容器或視窗定位 */
-            top: 1rem;
-            right: 1rem;
-            background-color: #fff;
-            padding: 0.5rem 1rem;
-            border-radius: 9999px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            font-size: 0.8rem;
-            color: #6b7280;
-            font-weight: 500;
-            z-index: 50; /* 確保在其他元素之上 */
-        }
     </style>
 </head>
-<body class="p-4 md:p-8 relative"> <!-- 將 body 設為 relative 以便定位時間戳記 -->
-
-    <!-- 新增：最後更新時間的標籤 -->
-    <div class="update-timestamp">
-        <span id="last-updated-time">最後更新時間：2025/09/05 19:37</span>
-    </div>
+<body class="p-4 md:p-8">
 
     <div class="max-w-4xl mx-auto">
         <header class="text-center mb-8">
@@ -529,7 +509,7 @@
             const closeButton = document.querySelector('.close-button');
             const modalTitle = document.getElementById('modal-title');
             const modalDetailsList = document.getElementById('modal-details-list');
-
+            
             // Define main expense data for the pie chart
             const expensesData = [
                 { category: '機票', value: 23118 },
