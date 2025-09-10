@@ -670,3 +670,23 @@
                 header.addEventListener('click', () => {
                     const content = header.nextElementSibling;
                     const chevron = header.querySelector('.chevron');
+                    
+                    if (content.classList.contains('open')) {
+                        content.classList.remove('open');
+                        chevron.classList.remove('rotated');
+                    } else {
+                        document.querySelectorAll('.collapsible-content.open').forEach(c => c.classList.remove('open'));
+                        document.querySelectorAll('.chevron.rotated').forEach(c => c.classList.remove('rotated'));
+
+                        content.classList.add('open');
+                        chevron.classList.add('rotated');
+                    }
+                });
+            });
+
+            // Initial active state
+            setActiveTab('tab-overview');
+        });
+    </script>
+</body>
+</html>
