@@ -127,6 +127,9 @@
     </style>
 </head>
 <body class="p-4 md:p-8">
+    <div class="fixed top-4 right-4 text-xs md:text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full shadow-md">
+        最後更新時間：2025-09-05 19:37
+    </div>
 
     <div class="max-w-4xl mx-auto">
         <header class="text-center mb-8">
@@ -147,6 +150,9 @@
                 </button>
                 <button id="tab-restaurants" class="pill-tab-button flex-1 md:flex-none text-center text-gray-600 font-semibold focus:outline-none">
                     餐廳推薦
+                </button>
+                <button id="tab-map" class="pill-tab-button flex-1 md:flex-none text-center text-gray-600 font-semibold focus:outline-none">
+                    地圖
                 </button>
                 <button id="tab-expenses" class="pill-tab-button flex-1 md:flex-none text-center text-gray-600 font-semibold focus:outline-none">
                     費用分析
@@ -481,6 +487,21 @@
                 </div>
             </div>
 
+            <div id="content-map" class="tab-content p-4 md:p-6 bg-white rounded-b-lg">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-700">地圖</h2>
+                <!-- 使用 div 包裝 iframe 以更好地控制寬高比 -->
+                <div class="relative w-full overflow-hidden rounded-lg" style="padding-top: 56.25%;">
+                    <iframe 
+                        src="https://www.google.com/maps/d/embed?mid=1mltIDX4-B6rG-VHdnv-5NMG6K7OoPDY&ehbc=2E312F" 
+                        class="absolute top-0 left-0 w-full h-full" 
+                        frameborder="0" 
+                        allowfullscreen="" 
+                        aria-hidden="false" 
+                        tabindex="0">
+                    </iframe>
+                </div>
+            </div>
+
             <div id="content-expenses" class="tab-content p-4 md:p-6 bg-white rounded-b-lg text-center">
                 <h2 class="text-2xl font-semibold mb-4 text-gray-700">費用分析</h2>
                 <div class="mb-4">
@@ -489,6 +510,7 @@
                 <div id="chart-container" class="w-full h-80"></div>
                 <div class="mt-8 flex flex-wrap justify-center gap-4 text-sm text-left" id="legend-container"></div>
             </div>
+
         </div>
     </div>
 
@@ -509,36 +531,34 @@
             const closeButton = document.querySelector('.close-button');
             const modalTitle = document.getElementById('modal-title');
             const modalDetailsList = document.getElementById('modal-details-list');
-            
-            // Define main expense data for the pie chart
+
+            // --- 費用分析數據與函式 ---
             const expensesData = [
                 { category: '機票', value: 23118 },
-                { category: '住宿', value: 9385 + 7214 + 4063 },
+                { category: '住宿', value: 28156 + 21643 + 12189 },
                 { category: '交通 (日本)', value: 4541 },
                 { category: '交通 (台灣)', value: 1190 + 2300 },
                 { category: '通訊/保險', value: 1130 + 1700 }
             ];
 
-            // Sort data by value in descending order
             expensesData.sort((a, b) => b.value - a.value);
 
-            // Define detailed expense data for the modal pop-up
             const detailedExpensesData = {
                 '機票': [
                     { name: '札幌進（TR892）', cost: 9630 },
                     { name: '函館出（JX861）', cost: 13488 }
                 ],
-                '交通 (台灣)': [
-                    { name: '高鐵（台南 > 桃園）', cost: 1190 },
-                    { name: '桃園包車回台南', cost: 2300 }
+                '住宿': [
+                    { name: '京王Prelia酒店', cost: 28156 },
+                    { name: 'The Lake Suit湖之栖', cost: 21643 },
+                    { name: 'OMO5 函館', cost: 12189 }
                 ],
                 '交通 (日本)': [
                     { name: '北海道 JR PASS 五日券', cost: 4541 },
                 ],
-                '住宿': [
-                    { name: '京王Prelia酒店 (5晚)', cost: 9385 },
-                    { name: 'The Lake Suit湖之栖 (1晚)', cost: 7214 },
-                    { name: 'OMO5 函館 (2晚)', cost: 4063 }
+                '交通 (台灣)': [
+                    { name: '高鐵（台南 > 桃園）', cost: 1190 },
+                    { name: '桃園包車回台南', cost: 2300 }
                 ],
                 '通訊/保險': [
                     { name: '網卡', cost: 1130 },
@@ -550,14 +570,15 @@
                 const totalCost = expensesData.reduce((sum, item) => sum + item.value, 0);
                 document.getElementById('total-cost-display').textContent = `$${totalCost.toLocaleString()}`;
 
-                const width = d3.select('#chart-container').node().clientWidth;
+                const chartContainer = document.getElementById('chart-container');
+                const width = chartContainer.clientWidth;
                 const height = 320;
                 const radius = Math.min(width, height) / 2.5;
 
-                d3.select('#chart-container').select('svg').remove();
+                d3.select(chartContainer).select('svg').remove();
                 d3.select('#legend-container').html('');
 
-                const svg = d3.select("#chart-container")
+                const svg = d3.select(chartContainer)
                     .append("svg")
                     .attr("width", width)
                     .attr("height", height)
@@ -566,9 +587,8 @@
 
                 const color = d3.scaleOrdinal(d3.schemeCategory10);
 
-                const pie = d3.pie().value(d => d.value).sort(null); // Preserve original order
+                const pie = d3.pie().value(d => d.value).sort(null);
                 const arc = d3.arc().innerRadius(0).outerRadius(radius);
-                const outerArc = d3.arc().innerRadius(radius * 1.1).outerRadius(radius * 1.1);
                 const pieData = pie(expensesData);
 
                 svg.selectAll('path')
@@ -584,7 +604,6 @@
                         showDetailsModal(d.data);
                     });
 
-                // Add legend
                 const legend = d3.select('#legend-container')
                     .selectAll('.legend-item')
                     .data(expensesData)
@@ -600,7 +619,6 @@
                     .text(d => `${d.category} ($${d.value.toLocaleString()})`);
             }
 
-            // Function to show the modal with detailed expenses
             function showDetailsModal(data) {
                 const details = detailedExpensesData[data.category];
                 if (details) {
@@ -615,19 +633,17 @@
                 }
             }
 
-            // Close the modal when the close button is clicked
             closeButton.onclick = function() {
                 modal.style.display = 'none';
             }
 
-            // Close the modal when the user clicks outside of it
             window.onclick = function(event) {
                 if (event.target == modal) {
                     modal.style.display = 'none';
                 }
             }
-
-            // Set initial active tab and content based on ID
+            
+            // --- 頁籤切換與功能初始化 ---
             function setActiveTab(tabId) {
                 const targetId = tabId.replace('tab-', 'content-');
                 
@@ -637,7 +653,6 @@
                 document.getElementById(tabId).classList.add('active');
                 document.getElementById(targetId).classList.add('active');
 
-                // Only render the chart when the expenses tab is active
                 if (tabId === 'tab-expenses') {
                     createPieChart();
                 }
@@ -655,23 +670,3 @@
                 header.addEventListener('click', () => {
                     const content = header.nextElementSibling;
                     const chevron = header.querySelector('.chevron');
-                    
-                    if (content.classList.contains('open')) {
-                        content.classList.remove('open');
-                        chevron.classList.remove('rotated');
-                    } else {
-                        document.querySelectorAll('.collapsible-content.open').forEach(c => c.classList.remove('open'));
-                        document.querySelectorAll('.chevron.rotated').forEach(c => c.classList.remove('rotated'));
-
-                        content.classList.add('open');
-                        chevron.classList.add('rotated');
-                    }
-                });
-            });
-
-            // Initial active state
-            setActiveTab('tab-overview');
-        });
-    </script>
-</body>
-</html>
