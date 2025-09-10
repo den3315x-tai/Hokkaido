@@ -104,7 +104,7 @@
             margin: 15% auto;
             padding: 20px;
             border: 1px solid #888;
-            width: 80%;
+            width: 90%;
             max-width: 500px;
             border-radius: 12px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -568,7 +568,7 @@
 
                 const chartContainer = document.getElementById('chart-container');
                 const width = chartContainer.clientWidth;
-                const height = 320;
+                const height = Math.min(width, 320); // Make height responsive
                 const radius = Math.min(width, height) / 2.5;
 
                 d3.select(chartContainer).select('svg').remove();
@@ -638,6 +638,13 @@
                     modal.style.display = 'none';
                 }
             }
+
+            // Listen for window resize to redraw chart
+            window.addEventListener('resize', () => {
+                if (document.getElementById('content-expenses').classList.contains('active')) {
+                    createPieChart();
+                }
+            });
             
             // --- 頁籤切換與功能初始化 ---
             function setActiveTab(tabId) {
