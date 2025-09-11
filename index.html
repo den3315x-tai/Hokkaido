@@ -215,12 +215,12 @@
                     <h2 class="text-2xl font-semibold mb-4 text-gray-700">行程總覽</h2>
                     <div class="p-4 rounded-xl bg-gray-50">
                         <ul class="list-disc ml-6 space-y-2 text-gray-600">
-                            <li><span class="font-semibold">第一天 (1/18)</span>：台南 > 桃園 > 札幌，抵達後前往飯店並逛狸小路。</li>
+                            <li><span class="font-semibold">第一天 (1/18)</span>：台南 > 桃園 > 札幌，新千歲機場吃晚餐後前往飯店。</li>
                             <li><span class="font-semibold">第二天 (1/19)</span>：札幌市區一日遊，參觀北海道神宮與圓山動物園。</li>
                             <li><span class="font-semibold">第三天 (1/20)</span>：札幌近郊，遊覽白色戀人與札幌啤酒博物館。</li>
                             <li><span class="font-semibold">第四天 (1/21)</span>：札幌市區，前往火腿巨蛋並欣賞藻岩山夜景。</li>
                             <li><span class="font-semibold">第五天 (1/22)</span>：小樽一日遊。</li>
-                            <li><span class="font-semibold">第六天 (1/23)</span>：札幌 > 洞爺湖，遊覽登別地獄谷、溫泉街。</li>
+                            <li><span class="font-semibold">第六天 (1/23)</span>：札幌 > 洞爺湖，遊覽登別地獄谷晚上住洞爺湖。</li>
                             <li><span class="font-semibold">第七天 (1/24)</span>：洞爺湖 > 函館，前往五稜郭。</li>
                             <li><span class="font-semibold">第八天 (1/25)</span>：函館市區觀光，逛朝市、金森倉庫群並欣賞函館山夜景。</li>
                             <li><span class="font-semibold">第九天 (1/26)</span>：函館 > 回國。</li>
@@ -339,8 +339,8 @@
                                 <li><span class="font-semibold">11:00-12:10:</span> 吃午餐</li>
                                 <li><span class="font-semibold">12:15-12:50:</span> 回登別車站</li>
                                 <li><span class="font-semibold">13:28-14:08:</span> 登別 > 洞爺車站 (火車"北斗號")</li>
-                                <li><span class="font-semibold">14:28-15:00:</span> 洞爺車站>飯店CHECK IN (車資約3100*2)</li>
-                                <li><span class="font-semibold">15:00-18:30:</span> 筒倉展望台>溫泉街逛街 (來回車資約8000 洞爺湖越後屋)</li>
+                                <li><span class="font-semibold">14:28-15:00:</span> 洞爺車站>飯店CHECK IN (休息一下)</li>
+                                <li><span class="font-semibold">15:00-18:30:</span> 筒倉展望台>溫泉街逛街</li>
                                 <li><span class="font-semibold">18:30:</span> 吃飯</li>
                             </ul>
                         </div>
@@ -354,8 +354,8 @@
                         <div class="collapsible-content p-4">
                             <ul class="list-disc ml-6 space-y-2">
                                 <li><span class="font-semibold">07:30-08:45:</span> 起床吃早餐</li>
-                                <li><span class="font-semibold">09:00-10:00:</span> 坐遊覽船 (來回車資約8000)</li>
-                                <li><span class="font-semibold">11:00:</span> 回飯店拿行李去洞爺車站 (車資約3100*2)</li>
+                                <li><span class="font-semibold">09:00-10:00:</span> 坐遊覽船</li>
+                                <li><span class="font-semibold">11:00:</span> 回飯店拿行李去洞爺車站</li>
                                 <li><span class="font-semibold">11:30-12:40:</span> 車站附近吃午餐</li>
                                 <li><span class="font-semibold">12:51-14:41:</span> 洞爺 > 函館 (OMO5 放行李)</li>
                                 <li><span class="font-semibold">15:30-17:30:</span> 五稜郭 (日落有點燈活動)</li>
@@ -451,7 +451,7 @@
                             <tr>
                                 <td>海鮮丼</td>
                                 <td>Sapporo Kaisen-don Senmon Ten Sushi Donburi</td>
-                                <td><a class="text-blue-600" href="https://maps.app.goo.gl/EiqNbnPg8ZXqx3w88" target="_blank">日本〒060-0063 Hokkaido, Sapporo, Chuo Ward, Minami 3 Jonishi, 5 Chome−24 からくさホテル 1F</a></td>
+                                <td><a class="text-blue-600" href="https://maps.app.goo.gl/EiqNbnPg8ZXqx3w88" target="_blank">日本〒060-0063 Hokkaido, Sapporo, Chuo Ward, Minami 3 Jonishi, 5 Chome-24 からくさホテル 1F</a></td>
                             </tr>
                             <tr>
                                 <td>迴轉壽司</td>
@@ -507,15 +507,14 @@
                 <div class="mt-8 flex flex-wrap justify-center gap-4 text-sm text-left" id="legend-container"></div>
             </div>
 
-        </div>
-    </div>
-
-    <!-- Modal for detailed expenses -->
-    <div id="details-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h3 id="modal-title" class="text-xl font-bold mb-4"></h3>
-            <ul id="modal-details-list" class="modal-details list-disc ml-4 space-y-1"></ul>
+            <!-- Modal for detailed expenses -->
+            <div id="details-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-button">&times;</span>
+                    <h3 id="modal-title" class="text-xl font-bold mb-4"></h3>
+                    <ul id="modal-details-list" class="modal-details list-disc ml-4 space-y-1"></ul>
+                </div>
+            </div>
         </div>
     </div>
 
