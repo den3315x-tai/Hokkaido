@@ -11,8 +11,8 @@
             font-family: 'Inter', sans-serif;
             background-color: #f7f6f2;
             color: #3f3d3d;
-            margin: 0; /* 移除預設的 body 邊界 */
-            padding: 0; /* 移除預設的 body 內距 */
+            margin: 0;
+            padding: 0;
         }
         .tab-content {
             display: none;
@@ -129,8 +129,8 @@
     </style>
 </head>
 <body class="p-0">
-    <div class="max-w-9xl mx-auto p-4 md:p-8">
-        <header class="text-center mb-8">
+    <div class="max-w-9xl mx-auto p-0 md:p-0">
+        <header class="text-center">
         </header>
 
         <div class="card rounded-xl p-4 md:p-8">
@@ -568,7 +568,7 @@
 
                 const chartContainer = document.getElementById('chart-container');
                 const width = chartContainer.clientWidth;
-                const height = Math.min(width, 320); // Make height responsive
+                const height = Math.min(width, 320);
                 const radius = Math.min(width, height) / 2.5;
 
                 d3.select(chartContainer).select('svg').remove();
