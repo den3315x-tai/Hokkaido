@@ -11,6 +11,8 @@
             font-family: 'Inter', sans-serif;
             background-color: #f7f6f2;
             color: #3f3d3d;
+            margin: 0; /* 移除預設的 body 邊界 */
+            padding: 0; /* 移除預設的 body 內距 */
         }
         .tab-content {
             display: none;
@@ -24,7 +26,7 @@
         }
         .pill-tab-button {
             border-radius: 9999px;
-             /*padding: 10px 20px;*/
+            padding: 10px 20px;
             font-size: 0.9rem;
             font-weight: 500;
             transition: all 0.2s ease-in-out;
@@ -126,8 +128,8 @@
         }
     </style>
 </head>
-<body class="p-4 md:p-8">
-    <div class="max-w-9xl mx-auto">
+<body class="p-0">
+    <div class="max-w-9xl mx-auto p-4 md:p-8">
         <header class="text-center mb-8">
         </header>
 
