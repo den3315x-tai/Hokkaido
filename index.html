@@ -126,6 +126,29 @@
         .modal-details li {
             padding: 4px 0;
         }
+        /* Horizontal scroll for cards */
+        .horizontal-scroll-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Firefox */
+        }
+        .horizontal-scroll-container::-webkit-scrollbar {
+            display: none; /* Chrome, Safari */
+        }
+        .horizontal-scroll-container .card {
+            flex: 0 0 85%; /* Make cards take up a certain width */
+            margin-right: 1.5rem; /* Add spacing between cards */
+        }
+        @media (min-width: 768px) {
+            .horizontal-scroll-container .card {
+                flex: 0 0 45%;
+            }
+        }
+        @media (min-width: 1024px) {
+            .horizontal-scroll-container .card {
+                flex: 0 0 30%;
+            }
+        }
     </style>
 </head>
 <body class="p-0">
@@ -154,6 +177,9 @@
                 </button>
                 <button id="tab-expenses" class="pill-tab-button flex-1 md:flex-none text-center text-gray-600 font-semibold focus:outline-none">
                     費用分析
+                </button>
+                <button id="tab-Prepare" class="pill-tab-button flex-1 md:flex-none text-center text-gray-600 font-semibold focus:outline-none">
+                    行程準備
                 </button>
             </div>
 
@@ -358,7 +384,7 @@
                                     <li><span class="font-semibold">09:30-11:00:</span> 探訪登別地獄谷，感受地熱景觀的震撼。</li>
                                     <li><span class="font-semibold">11:00-12:10:</span> 午餐時間。</li>
                                     <li><span class="font-semibold">12:15-12:50:</span> 返回登別車站。</li>
-                                    <li><span class="font-semibold">13:28-14:08:</span> 搭乘火車前往洞爺車站。</li>
+                                    <li><span class="font-semibold">13:28-14:08:</span> 搭火車前往洞爺車站。</li>
                                     <li><span class="font-semibold">14:28-15:00:</span> 前往飯店辦理入住，享受湖景溫泉。</li>
                                     <li><span class="font-semibold">15:00-18:30:</span> 參觀筒倉展望台，並在溫泉街悠閒散步。</li>
                                     <li><span class="font-semibold">18:30:</span> 在飯店享用豐盛的晚餐。</li>
@@ -541,6 +567,57 @@
                 <div class="mt-8 flex flex-wrap justify-center gap-4 text-sm text-left" id="legend-container"></div>
             </div>
 
+            <div id="content-Prepare" class="tab-content p-4 md:p-6 bg-white rounded-b-lg">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-700">行程準備</h2>
+                <div class="horizontal-scroll-container flex flex-nowrap overflow-x-auto space-x-6 pb-4">
+                    <!-- 卡片 1: 重要文件與交通 -->
+                    <div class="card p-5 rounded-xl border border-gray-200 min-w-[280px]">
+                        <div class="flex items-center mb-3 text-2xl text-blue-500">
+                            <span class="mr-2">📄</span>
+                            <h3 class="font-bold text-gray-700">重要文件與交通</h3>
+                        </div>
+                        <ul class="list-disc ml-6 space-y-1 text-gray-600">
+                            <li>護照與簽證: 確保護照有效期限足夠，並檢查是否需要簽證。</li>
+                            <li>機票與住宿: 備妥電子機票、住宿預訂單的列印或電子檔。</li>
+                            <li>交通票券: 預先購買好的北海道 JR PASS、巴士票券等。</li>
+                            <li>旅遊保險: 準備旅遊平安險或不便險的證明。</li>
+                        </ul>
+                    </div>
+                    <!-- 卡片 2: 服裝與保暖 -->
+                    <div class="card p-5 rounded-xl border border-gray-200 min-w-[280px]">
+                        <div class="flex items-center mb-3 text-2xl text-red-500">
+                            <span class="mr-2">🧤</span>
+                            <h3 class="font-bold text-gray-700">服裝與保暖</h3>
+                        </div>
+                        <ul class="list-disc ml-6 space-y-1 text-gray-600">
+                            <li>洋蔥式穿法: 採用「內層排汗、中層保暖、外層防風防水」的三層式穿法。</li>
+                            <li>內層: 選擇吸濕排汗的發熱衣或機能服飾。</li>
+                            <li>中層: 羊毛衫、刷毛衣或羽絨背心。</li>
+                            <li>外層: 防風防水的大衣或羽絨外套，最好有連帽設計。</li>
+                            <li>手套、帽子、圍巾: 這些是防止熱量流失的關鍵，建議多帶幾雙備用。</li>
+                            <li>雪靴: 選擇防滑、防水且內層有刷毛的雪靴，避免滑倒和受凍。</li>
+                            <li>厚襪子: 羊毛襪或專用的滑雪襪，保持腳部溫暖。</li>
+                        </ul>
+                    </div>
+                    <!-- 卡片 3: 實用物品與注意事項 -->
+                    <div class="card p-5 rounded-xl border border-gray-200 min-w-[280px]">
+                        <div class="flex items-center mb-3 text-2xl text-green-500">
+                            <span class="mr-2">🎒</span>
+                            <h3 class="font-bold text-gray-700">實用物品與注意事項</h3>
+                        </div>
+                        <ul class="list-disc ml-6 space-y-1 text-gray-600">
+                            <li>手機與充電設備: 攜帶行動電源，低溫會加速手機耗電。</li>
+                            <li>保濕用品: 北海道冬季乾燥，護唇膏、護手霜和保濕乳液是必備品。</li>
+                            <li>暖暖包: 可隨身攜帶，用於手腳保暖或黏貼在身上。</li>
+                            <li>防滑鞋釘: 如果雪靴沒有足夠的防滑功能，可購買防滑鞋釘套在鞋底。</li>
+                            <li>交通時間: 冬季交通可能因風雪延遲，務必預留足夠的轉乘時間。</li>
+                            <li>室內外溫差: 避免頻繁進出室內外，以免感冒。</li>
+                            <li>日落時間: 冬季日落早，提早規劃行程以充分利用白天的時間。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
             <!-- Modal for detailed expenses -->
             <div id="details-modal" class="modal">
                 <div class="modal-content">
@@ -687,7 +764,12 @@
                 contents.forEach(item => item.classList.remove('active'));
 
                 document.getElementById(tabId).classList.add('active');
-                document.getElementById(targetId).classList.add('active');
+                const targetContent = document.getElementById(targetId);
+                if (targetContent) {
+                    targetContent.classList.add('active');
+                } else {
+                    console.error(`Error: Element with ID "${targetId}" not found.`);
+                }
 
                 if (tabId === 'tab-expenses') {
                     createPieChart();
