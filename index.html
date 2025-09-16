@@ -126,29 +126,6 @@
         .modal-details li {
             padding: 4px 0;
         }
-        /* Horizontal scroll for cards */
-        .horizontal-scroll-container {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none; /* Firefox */
-        }
-        .horizontal-scroll-container::-webkit-scrollbar {
-            display: none; /* Chrome, Safari */
-        }
-        .horizontal-scroll-container .card {
-            flex: 0 0 85%; /* Make cards take up a certain width */
-            margin-right: 1.5rem; /* Add spacing between cards */
-        }
-        @media (min-width: 768px) {
-            .horizontal-scroll-container .card {
-                flex: 0 0 45%;
-            }
-        }
-        @media (min-width: 1024px) {
-            .horizontal-scroll-container .card {
-                flex: 0 0 30%;
-            }
-        }
     </style>
 </head>
 <body class="p-0">
@@ -175,11 +152,11 @@
                 <button id="tab-map" class="pill-tab-button flex-1 md:flex-none text-center text-gray-600 font-semibold focus:outline-none">
                     旅行地圖
                 </button>
+                 <button id="tab-Prepare" class="pill-tab-button flex-1 md:flex-none text-center text-gray-600 font-semibold focus:outline-none">
+                    行程準備
+                </button>
                 <button id="tab-expenses" class="pill-tab-button flex-1 md:flex-none text-center text-gray-600 font-semibold focus:outline-none">
                     費用分析
-                </button>
-                <button id="tab-Prepare" class="pill-tab-button flex-1 md:flex-none text-center text-gray-600 font-semibold focus:outline-none">
-                    行程準備
                 </button>
             </div>
 
@@ -569,14 +546,13 @@
 
             <div id="content-Prepare" class="tab-content p-4 md:p-6 bg-white rounded-b-lg">
                 <h2 class="text-2xl font-semibold mb-4 text-gray-700">行程準備</h2>
-                <div class="horizontal-scroll-container flex flex-nowrap overflow-x-auto space-x-6 pb-4">
+                <div class="space-y-6">
                     <!-- 卡片 1: 重要文件與交通 -->
-                    <div class="card p-5 rounded-xl border border-gray-200 min-w-[280px]">
-                        <div class="flex items-center mb-3 text-2xl text-blue-500">
-                            <span class="mr-2">📄</span>
-                            <h3 class="font-bold text-gray-700">重要文件與交通</h3>
-                        </div>
-                        <ul class="list-disc ml-6 space-y-1 text-gray-600">
+                    <div class="border rounded-lg p-6">
+                        <h3 class="text-lg font-bold text-gray-800 flex items-center mb-3">
+                            <span class="mr-2">📄</span>重要文件與交通
+                        </h3>
+                        <ul class="list-disc ml-6 space-y-2 text-gray-600">
                             <li>護照與簽證: 確保護照有效期限足夠，並檢查是否需要簽證。</li>
                             <li>機票與住宿: 備妥電子機票、住宿預訂單的列印或電子檔。</li>
                             <li>交通票券: 預先購買好的北海道 JR PASS、巴士票券等。</li>
@@ -584,12 +560,11 @@
                         </ul>
                     </div>
                     <!-- 卡片 2: 服裝與保暖 -->
-                    <div class="card p-5 rounded-xl border border-gray-200 min-w-[280px]">
-                        <div class="flex items-center mb-3 text-2xl text-red-500">
-                            <span class="mr-2">🧤</span>
-                            <h3 class="font-bold text-gray-700">服裝與保暖</h3>
-                        </div>
-                        <ul class="list-disc ml-6 space-y-1 text-gray-600">
+                    <div class="border rounded-lg p-6">
+                        <h3 class="text-lg font-bold text-gray-800 flex items-center mb-3">
+                            <span class="mr-2">🧤</span>服裝與保暖
+                        </h3>
+                        <ul class="list-disc ml-6 space-y-2 text-gray-600">
                             <li>洋蔥式穿法: 採用「內層排汗、中層保暖、外層防風防水」的三層式穿法。</li>
                             <li>內層: 選擇吸濕排汗的發熱衣或機能服飾。</li>
                             <li>中層: 羊毛衫、刷毛衣或羽絨背心。</li>
@@ -600,12 +575,11 @@
                         </ul>
                     </div>
                     <!-- 卡片 3: 實用物品與注意事項 -->
-                    <div class="card p-5 rounded-xl border border-gray-200 min-w-[280px]">
-                        <div class="flex items-center mb-3 text-2xl text-green-500">
-                            <span class="mr-2">🎒</span>
-                            <h3 class="font-bold text-gray-700">實用物品與注意事項</h3>
-                        </div>
-                        <ul class="list-disc ml-6 space-y-1 text-gray-600">
+                    <div class="border rounded-lg p-6">
+                        <h3 class="text-lg font-bold text-gray-800 flex items-center mb-3">
+                            <span class="mr-2">🎒</span>實用物品與注意事項
+                        </h3>
+                        <ul class="list-disc ml-6 space-y-2 text-gray-600">
                             <li>手機與充電設備: 攜帶行動電源，低溫會加速手機耗電。</li>
                             <li>保濕用品: 北海道冬季乾燥，護唇膏、護手霜和保濕乳液是必備品。</li>
                             <li>暖暖包: 可隨身攜帶，用於手腳保暖或黏貼在身上。</li>
