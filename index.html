@@ -469,79 +469,105 @@
             </div>
             
             <div id="content-restaurants" class="tab-content p-4 md:p-6 bg-white rounded-b-lg">
-                <h2 class="text-2xl font-semibold mb-4 text-gray-700">餐廳推薦</h2>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>類別</th>
-                                <th>店名</th>
-                                <th>地址</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>海鮮丼</td>
-                                <td><a class="text-blue-600" href="https://maps.app.goo.gl/EiqNbnPg8ZXqx3w88" target="_blank">Sapporo Kaisen-don Senmon Ten Sushi Donburi</a></td>
-                                <td>北海道札幌市中央區南6条西4丁目1−7</td>
-                            </tr>
-                            <tr>
-                                <td>迴轉壽司</td>
-                                <td><a class="text-blue-600" href="https://maps.app.goo.gl/DGiPEtcb8HefdQsX6" target="_blank">根室花丸 JR Tower</a></td>
-                                <td>札幌市中央區北5条西2丁目5 JRタワー札幌ステラプレイス6F</td>
-                            </tr>
-                            <tr>
-                                <td>甜點</td>
-                                <td><a class="text-blue-600" href="https://maps.app.goo.gl/yZQrVDfGXGzoCBZb8" target="_blank">北菓樓 札幌本館</a></td>
-                                <td>Sapporo, Chuo Ward, Kita 1 Jonishi, 5 Chome−１−2</td>
-                            </tr>
-                            <tr>
-                                <td>甜點</td>
-                                <td><a class="text-blue-600" href="https://maps.app.goo.gl/2RcfMSnaTuLB7tVB6" target="_blank">六花亭 札幌本店</a></td>
-                                <td>6 Chome-3-3 Kita 4 Jonishi, Chuo Ward, Sapporo</td>
-                            </tr>
-                            <tr>
-                                <td>燒肉</td>
-                                <td><a class="text-blue-600" href="https://maps.app.goo.gl/vsdVKKXHL7WtymqS6" target="_blank">北海道燒肉 北牛</a></td>
-                                <td>札幌市中央區南5条西6丁目2−2 </td>
-                            </tr>
-                            <tr>
-                                <td>湯咖哩</td>
-                                <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&query=Sapporo%2C%20Chuo%20Ward%2C%20Kita%204%20Jonishi%2C%201%20Chome%20%E3%83%9B%E3%82%AF%E3%83%AC%E3%83%B3%E3%83%93%E3%83%AB%20B1F%20%E3%83%91%E3%83%BC%E3%83%AB%E3%82%BF%E3%82%A6%E3%83%B3" target="_blank">奥芝商店湯咖哩</a></td>
-                                <td>札幌市中央區南6条西4丁目1−1</td>
-                            </tr>
-                            <tr>
-                                <td>湯咖哩</td>
-                                <td><a class="text-blue-600" href="https://maps.app.goo.gl/Uz4R3GXXh3CbDxwi7" target="_blank">湯咖哩 Yellow</a></td>
-                                <td>Sapporo, Chuo Ward, Minami 1 Jonishi, 4 Chome−７−1 クリエイトビル 地下１Ｆ</td>
-                            </tr>
-                             <tr>
-                                <td>湯咖哩</td>
-                                <td><a class="text-blue-600" href="https://maps.app.goo.gl/HNRPnadsg2quUGbW9" target="_blank">SoupCurry HLAHAL-ハラハル-</a></td>
-                                <td>27-34 Toyakoonsen, Toyako, Abuta District</td>
-                            </tr>
-                             <tr>
-                                <td>燒肉丼飯</td>
-                                <td><a class="text-blue-600" href="https://maps.app.goo.gl/6ptXoECG4NQKE5K88" target="_blank">湯炭火ダイニングアペコロ</a></td>
-                                <td>6-15 Toyakoonsen, Toyako, Abuta District, Hokkaido</td>
-                            </tr>
-                            <tr>
-                                <td>成吉思汗</td>
-                                <td><a class="text-blue-600" href="https://maps.app.goo.gl/8rURFiwmnPGH768s9" target="_blank">大黒屋 函館五稜郭店</a></td>
-                                <td>函館市五稜郭町32-1</td>
-                            </tr>
-                            <tr>
-                                <td>燒鳥</td>
-                                <td><a class="text-blue-600" href="https://maps.app.goo.gl/FPQjbdLZVURXJCKm8" target="_blank">鳥辰十字街店</a></td>
-                                <td>函館市末広町18-20</td>
-                            </tr>
-                             <tr>
-                                <td>燒鳥</td>
-                                <td><a class="text-blue-600" href="https://maps.app.goo.gl/uEAWCCoGYqYxZNf3A" target="_blank">長谷川商店</a></td>
-                                <td>14-10 Wakamatsucho, Hakodate, Hokkaido 040-0063</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <h2 class="text-2xl font-semibold mb-6 text-gray-700">餐廳推薦 (依地區分類)</h2>
+
+                <!-- 札幌地區 (Sapporo) -->
+                <div class="mb-8 p-4 border rounded-lg bg-gray-50">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">📍 札幌市區 (Sapporo)</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>類別</th>
+                                    <th>店名</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>海鮮丼</td>
+                                    <td><a class="text-blue-600" href="https://maps.app.goo.gl/EiqNbnPg8ZXqx3w88" target="_blank">Sapporo Kaisen-don Senmon Ten Sushi Donburi</a></td>
+                                </tr>
+                                <tr>
+                                    <td>迴轉壽司</td>
+                                    <td><a class="text-blue-600" href="https://maps.app.goo.gl/DGiPEtcb8HefdQsX6" target="_blank">根室花丸 JR Tower</a></td>
+                                </tr>
+                                <tr>
+                                    <td>燒肉</td>
+                                    <td><a class="text-blue-600" href="https://maps.app.goo.gl/vsdVKKXHL7WtymqS6" target="_blank">北海道燒肉 北牛</a></td>
+                                </tr>
+                                <tr>
+                                    <td>湯咖哩</td>
+                                    <td><a class="text-blue-600" href="https://www.google.com/maps/search/?api=1&query=Sapporo%2C%20Chuo%20Ward%2C%20Kita%204%20Jonishi%2C%201%20Chome%20%E3%83%9B%E3%82%AF%E3%83%AC%E3%83%B3%E3%83%93%E3%83%AB%20B1F%20%E3%83%91%E3%83%BC%E3%83%AB%E3%82%BF%E3%82%A6%E3%83%B3" target="_blank">奥芝商店湯咖哩</a></td>
+                                </tr>
+                                <tr>
+                                    <td>湯咖哩</td>
+                                    <td><a class="text-blue-600" href="https://maps.app.goo.gl/Uz4R3GXXh3CbDxwi7" target="_blank">湯咖哩 Yellow</a></td>
+                                </tr>
+                                <tr>
+                                    <td>甜點</td>
+                                    <td><a class="text-blue-600" href="https://maps.app.goo.gl/yZQrVDfGXGzoCBZb8" target="_blank">北菓樓 札幌本館</a></td>
+                                </tr>
+                                <tr>
+                                    <td>甜點</td>
+                                    <td><a class="text-blue-600" href="https://maps.app.goo.gl/2RcfMSnaTuLB7tVB6" target="_blank">六花亭 札幌本店</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 洞爺湖地區 (Toyako) -->
+                <div class="mb-8 p-4 border rounded-lg bg-gray-50">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">♨️ 洞爺湖 (Toyako)</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>類別</th>
+                                    <th>店名</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>湯咖哩</td>
+                                    <td><a class="text-blue-600" href="https://maps.app.goo.gl/HNRPnadsg2quUGbW9" target="_blank">SoupCurry HLAHAL-ハラハル-</a></td>
+                                </tr>
+                                <tr>
+                                    <td>燒肉丼飯</td>
+                                    <td><a class="text-blue-600" href="https://maps.app.goo.gl/6ptXoECG4NQKE5K88" target="_blank">湯炭火ダイニングアペコロ</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 函館地區 (Hakodate) -->
+                <div class="p-4 border rounded-lg bg-gray-50">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">🚢 函館 (Hakodate)</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>類別</th>
+                                    <th>店名</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>成吉思汗烤肉</td>
+                                    <td><a class="text-blue-600" href="https://maps.app.goo.gl/8rURFiwmnPGH768s9" target="_blank">大黒屋 函館五稜郭店</a></td>
+                                </tr>
+                                <tr>
+                                    <td>燒鳥 (居酒屋)</td>
+                                    <td><a class="text-blue-600" href="https://maps.app.goo.gl/FPQjbdLZVURXJCKm8" target="_blank">鳥辰十字街店</a></td>
+                                </tr>
+                                <tr>
+                                    <td>燒鳥 (居酒屋)</td>
+                                    <td><a class="text-blue-600" href="https://maps.app.goo.gl/uEAWCCoGYqYxZNf3A" target="_blank">長谷川商店</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
